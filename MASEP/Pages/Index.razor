@@ -1,5 +1,62 @@
 ﻿@page "/"
+@using System.Collections
 
-<div class="justify-content-md-center">
-    MASEP Registration Form
+@* Header *@
+<div class="main shadow p-3 mb-3 bg-white rounded">
+    <div class="d-flex top-row">
+        <div class="p-2">
+            <h2>
+                MASEP Registration Form
+            </h2>
+            <h8>Data from MASEP participants is used for research purposes ONLY.</h8><br />
+            <h8>Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h8>
+        </div>
+        <div class="ml-auto" style="margin-top:auto;">
+            <a href="/login" target="_self">Logout</a>
+        </div>
+    </div>
 </div>
+
+@* Obs *@
+<EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData">
+    <div class="container">
+        <div>
+            <ComponentContextRB Caption="Gender" items="@gender" respChanged="RBSelectionChanged"></ComponentContextRB>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </div>
+
+    @*<div class="container">
+            <div>
+                <ComponentContextRB Caption="Gender" @bind-resp="resp" @bind-resp:event="respChanged" items="@items"></ComponentContextRB>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>*@
+</EditForm>
+
+@code {
+    private AssessmentModel newObs = new AssessmentModel();
+    private List<MetaItemModel> gender = new List<MetaItemModel>()
+    {
+        new MetaItemModel { ItemId=1, ItemText="Male"},
+        new MetaItemModel { ItemId=2, ItemText="Female"}
+    };
+
+    protected void RBSelectionChanged(DictionaryEntry val)
+    {
+        switch (val.Key.ToString())
+        {
+            case "Gender":
+                newObs.Gender = (int)val.Value;
+                break;
+        }
+    }
+    private void SaveData()
+    {
+        Console.WriteLine("");
+    }
+}
