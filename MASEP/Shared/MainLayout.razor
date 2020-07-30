@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+
+@*<div class="sidebar">
+    <NavMenu />
+</div>*@
+
+    @*<div class="main">
+        <div class="top-row px-4">
+            <a href="/" target="_self">MASEP Registration Form</a>
+            <a href="/login" target="_self">Logout</a>
+        </div>
+
+        <div class="content px-4 container">
+            @Body
+        </div>
+    </div>*@
+
+    <div class="container-fluid main shadow p-3 mb-5 bg-white rounded">
+        <div class="d-flex top-row">
+            <div class="p-2">
+                <h2>
+                    MASEP Registration Form
+                </h2>
+                <h7>Data from MASEP participants is used for research purposes ONLY.</h7><br />
+                <h7>Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
+            </div>
+            <div class="ml-auto" style="margin-top:auto;">
+                <a href="/login" target="_self">Logout</a>
+            </div>
+
+        </div>
+    </div>
+
