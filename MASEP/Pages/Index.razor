@@ -3,14 +3,14 @@
 
 
 @* Header *@
-<div class="main shadow p-3 mb-3 bg-white rounded">
+<div class="main shadow p-3 mb-2 bg-white rounded">
     <div class="d-flex top-row">
         <div class="p-2">
             <h2>
                 MASEP Registration Form
             </h2>
-            <h8>Data from MASEP participants is used for research purposes ONLY.</h8><br />
-            <h8>Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h8>
+            <h7 class="special">Data from MASEP participants is used for research purposes ONLY.</h7><br />
+            <h7 class="special">Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
         </div>
         <div class="ml-auto" style="margin-top:auto;">
             <a href="/login" target="_self">Logout</a>
@@ -20,15 +20,40 @@
 
 @* Obs *@
 <EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData">
-    <div class="container">
-        <div>
-            <ComponentContextRB Caption="Gender" items="@gender" respChanged="SelectionChanged"></ComponentContextRB>
+    <div class="container border shadow">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mt-2">
+            <ComponentContextRB Caption="Gender" items="@lstGender" respChanged="SelectionChanged"></ComponentContextRB>
         </div>
         <div>
-            <ComponentDD Caption="Race" items="@race" respChanged="SelectionChanged"></ComponentDD>
+            <ComponentDD Caption="Race" items="@lstRace" respChanged="SelectionChanged"></ComponentDD>
         </div>
         <div>
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <ComponentDD Caption="Marital" items="@lstMaritalStat" respChanged="SelectionChanged"></ComponentDD>
+        </div>
+        <div>
+            <ComponentDD Caption="Household Income" items="@lstIncome" respChanged="SelectionChanged"></ComponentDD>
+        </div>
+        <div>
+            <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
+            <InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged"/>
+        </div>
+        <div>
+            <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
+            <InputText class="form-control col-sm-1 custom-control-inline" @bind-Value="age" style="margin:10px 0px;" />
+        </div>
+        <div>
+            <ComponentDD Caption="Highest Level of Education" items="@lstEducation" respChanged="SelectionChanged"></ComponentDD>
+        </div>
+        <div>
+            <ComponentDD Caption="Employment Status" items="@lstEmpStat" respChanged="SelectionChanged"></ComponentDD>
+        </div>
+
+        @* Save *@
+        <div>
+            <button class="btn btn-primary" style="margin:10px;" type="submit">Submit</button>
+            <button class="btn btn-warning" style="margin:10px;" type="reset">Cancel</button>
         </div>
     </div>
 

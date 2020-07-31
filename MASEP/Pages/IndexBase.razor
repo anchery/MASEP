@@ -3,35 +3,73 @@
 
 @code {
     protected AssessmentModel newObs = new AssessmentModel();
-    protected List<MetaItemModel> gender;
-    protected List<MetaItemModel> race;
+    protected List<MetaItemModel> lstGender;
+    protected List<MetaItemModel> lstRace;
+    protected List<MetaItemModel> lstMaritalStat;
+    protected List<MetaItemModel> lstIncome;
+    protected List<MetaItemModel> lstEducation;
+    protected List<MetaItemModel> lstEmpStat;
+    protected string age="";
 
     protected void SelectionChanged(DictionaryEntry val)
     {
+        int response = int.Parse(val.Value.ToString());
         switch (val.Key.ToString())
         {
             case "Gender":
-                newObs.Gender = (int)val.Value;
+                newObs.Gender = response;
                 break;
             case "Race":
-                newObs.Race = (int)val.Value;
+                newObs.Race = response;
+                break;
+            case "Marital":
+                newObs.MaritalStat = response;
+                break;
+            case "Household Income":
+                newObs.Income = response;
+                break;
+            case "Highest Level of Education":
+                newObs.Education = response;
+                break;
+            case "Employment Status":
+                newObs.EmpStat = response;
                 break;
         }
     }
+    
+    protected void DOBChanged()
+    {
+        DateTime date1 = new DateTime(newObs.DOB.Year, newObs.DOB.Month, newObs.DOB.Day);
+        DateTime date2 = DateTime.Today;
+        age = (date2.Year - date1.Year).ToString();
+        Console.WriteLine(age);
+    }
+
     protected void SaveData()
     {
+        //TODO
+        //if success, reset model
+        //newObs = new AssessmentModel();
+        //Logout??
+
         Console.WriteLine("");
+
     }
-    protected async Task LoadItems()
+    protected async void LoadItems()
     {
-        string sql = "Select * From Meta_Items where ItemType='Gender' order by SortOrder";
-        gender = await _db.LoadData<MetaItemModel, dynamic>(sql, new { });
-        sql = "Select * From Meta_Items where ItemType='Race' order by SortOrder";
-        race = await _db.LoadData<MetaItemModel, dynamic>(sql, new { });
+        //string sql = "Select * From Meta_Items where ItemType='Gender' order by SortOrder";
+        //lstGender = await _db.LoadData<MetaItemModel, dynamic>(sql, new { });
+
+        lstGender = await _db.LoadMetaItems<MetaItemModel>("Gender");
+        lstRace = await _db.LoadMetaItems<MetaItemModel>("Race");
+        lstMaritalStat = await _db.LoadMetaItems<MetaItemModel>("Marital");
+        lstIncome = await _db.LoadMetaItems<MetaItemModel>("Income");
+        lstEducation = await _db.LoadMetaItems<MetaItemModel>("Education");
+        lstEmpStat = await _db.LoadMetaItems<MetaItemModel>("Employment");
     }
-    protected override async Task OnInitializedAsync()
+
+    protected override void OnInitialized()
     {
-        await LoadItems();
-        //return base.OnInitializedAsync();
+        LoadItems();
     }
 }

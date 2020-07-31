@@ -76,6 +76,8 @@ namespace MASEP.Data
             }
             return rows;
         }
+        
+        #region Login
 
         //public int InsertUser(LoginModel login)
         //{
@@ -92,12 +94,13 @@ namespace MASEP.Data
             return result == "0" ? false : true;
 
         }
-        //public List<MetaItemModel> LoadMetaItems(string itemType)
-        //{
-        //    string sql = "Select * From Meta_Items where ItemType='" + itemType + "' order by SortOrder";
-        //    return LoadData<MetaItemModel, dynamic>(sql, new { });
-        //    //return result == "0" ? false : true;
 
-        //}
+        #endregion
+
+        public async Task<List<T>> LoadMetaItems<T>(string itemType)
+        {
+            string sql = "Select * From Meta_Items where ItemType='" + itemType + "' order by SortOrder";
+            return await LoadData<T, dynamic>(sql, new { });
+        }
     }
 }
