@@ -1,0 +1,37 @@
+﻿@using System.Collections
+@inject SqliteDataAccess _db
+
+@code {
+    protected AssessmentModel newObs = new AssessmentModel();
+    protected List<MetaItemModel> gender;
+    protected List<MetaItemModel> race;
+
+    protected void SelectionChanged(DictionaryEntry val)
+    {
+        switch (val.Key.ToString())
+        {
+            case "Gender":
+                newObs.Gender = (int)val.Value;
+                break;
+            case "Race":
+                newObs.Race = (int)val.Value;
+                break;
+        }
+    }
+    protected void SaveData()
+    {
+        Console.WriteLine("");
+    }
+    protected async Task LoadItems()
+    {
+        string sql = "Select * From Meta_Items where ItemType='Gender' order by SortOrder";
+        gender = await _db.LoadData<MetaItemModel, dynamic>(sql, new { });
+        sql = "Select * From Meta_Items where ItemType='Race' order by SortOrder";
+        race = await _db.LoadData<MetaItemModel, dynamic>(sql, new { });
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadItems();
+        //return base.OnInitializedAsync();
+    }
+}
