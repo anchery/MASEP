@@ -10,6 +10,16 @@
     protected List<MetaItemModel> lstEducation;
     protected List<MetaItemModel> lstEmpStat;
     protected string age="";
+    protected string maxdate = DateTime.Today.ToString("yyyy-MM-dd");
+    //private List<ObservationGroupModel> ObsGroups;
+    protected List<ObservationViewModel> ObsList = new List<ObservationViewModel>();
+    private List<ObservationModel> obsItems;
+    protected List<ResponseModel> resp = new List<ResponseModel>();
+    private List<ResponseTypeModel> respType = new List<ResponseTypeModel>()
+    {
+            new ResponseTypeModel {ResponseId=1,ResponseText="Y"},
+            new ResponseTypeModel {ResponseId=2,ResponseText="N"}
+    };
 
     protected void SelectionChanged(DictionaryEntry val)
     {
@@ -36,17 +46,32 @@
                 break;
         }
     }
-    
+
     protected void DOBChanged()
     {
-        DateTime date1 = new DateTime(newObs.DOB.Year, newObs.DOB.Month, newObs.DOB.Day);
-        DateTime date2 = DateTime.Today;
-        age = (date2.Year - date1.Year).ToString();
-        Console.WriteLine(age);
+        //DateTime date1 = new DateTime(newObs.DOB.Year, newObs.DOB.Month, newObs.DOB.Day);
+        try
+        {
+            DateTime date1 = newObs.DOB;
+            DateTime date2 = DateTime.Today;
+            age = (date2.Year - date1.Year).ToString();
+            Console.WriteLine(age);
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+
     }
 
     protected void SaveData()
     {
+        //Save context items
+        //newObs.xxx
+        //Save observations
+        //foreach r in resp
+
         //TODO
         //if success, reset model
         //newObs = new AssessmentModel();
@@ -55,7 +80,7 @@
         Console.WriteLine("");
 
     }
-    protected async void LoadItems()
+    protected async void LoadMetaItems()
     {
         //string sql = "Select * From Meta_Items where ItemType='Gender' order by SortOrder";
         //lstGender = await _db.LoadData<MetaItemModel, dynamic>(sql, new { });
@@ -67,9 +92,27 @@
         lstEducation = await _db.LoadMetaItems<MetaItemModel>("Education");
         lstEmpStat = await _db.LoadMetaItems<MetaItemModel>("Employment");
     }
+    protected async void LoadMetaObservations()
+    {
+        try
+        {
+            obsItems = await _db.LoadMetaObservations("1");
+            ObservationViewModel ovm = new ObservationViewModel();
+            ovm.GrpId = 1;
+            ovm.GrpText = "";
+            ovm.observations = obsItems;
+            ovm.responseTypes = respType;
+            ObsList.Add(ovm);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
 
     protected override void OnInitialized()
     {
-        LoadItems();
+        LoadMetaItems();
+        LoadMetaObservations();
     }
 }

@@ -37,7 +37,8 @@
         </div>
         <div>
             <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
-            <InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged"/>
+            @*<InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged" />*@
+            <input type="date" onchange="DOBChanged" min="maxdate" max="@maxdate"/>
         </div>
         <div>
             <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
@@ -48,6 +49,17 @@
         </div>
         <div>
             <ComponentDD Caption="Employment Status" items="@lstEmpStat" respChanged="SelectionChanged"></ComponentDD>
+        </div>
+
+        @* Assessments *@
+        <div class="well well-sm">
+            <b>Please answer each question. Mark the appropriate response. Has this happened to you in the past year?</b>
+        </div>
+        <div>
+            @foreach (ObservationViewModel obs in ObsList)
+            {
+                <ComponentRBLeft @bind-resp="resp" @bind-resp:event="respChanged" Obs="@obs"></ComponentRBLeft>
+            }
         </div>
 
         @* Save *@

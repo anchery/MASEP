@@ -102,5 +102,15 @@ namespace MASEP.Data
             string sql = "Select * From Meta_Items where ItemType='" + itemType + "' order by SortOrder";
             return await LoadData<T, dynamic>(sql, new { });
         }
+        public Task<List<ObservationModel>> LoadMetaObservations(string filter)
+        {
+            string sql = string.Empty;
+            if (filter != null)
+                sql = "Select ObsId,ObsText From Meta_Observations where GrpId =" + filter+ " order by SortOrder";
+            else
+                sql = "Select ObsId,ObsText From Meta_Observations order by SortOrder";
+
+            return LoadData<ObservationModel, dynamic>(sql, new { });
+        }
     }
 }

@@ -189,7 +189,7 @@ app {
 }
 
 h7.special {
-    color: rgba(255,255,255,0.25);
+    color: white;
     outline: 0;
     font-family: Raleway, sans-serif;
     font-size: 14px;
