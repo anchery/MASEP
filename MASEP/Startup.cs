@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-//using MASEP.Data;
+using Microsoft.AspNetCore.Components.Authorization;
+
 
 namespace MASEP
 {
@@ -30,6 +31,7 @@ namespace MASEP
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<SqliteDataAccess, SqliteDataAccess>();
+            services.AddSingleton<AuthenticationStateProvider, AuthStateProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

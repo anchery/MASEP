@@ -1,0 +1,48 @@
+﻿@page "/"
+@inject NavigationManager navigationManager
+@inject SqliteDataAccess _db
+@inject AuthenticationStateProvider _auth
+
+<EditForm class="form-group" Model="login" OnValidSubmit="LoginUser">
+    <DataAnnotationsValidator />
+    <div style="text-align: center;margin-top:50px;">
+        <div class="form-group">
+            Username:
+            <input type="text" @bind-value="@login.UserName" />
+            <ValidationMessage For="() => login.UserName"></ValidationMessage>
+        </div>
+
+        <div class="form-group">
+            Password:
+            <input type="password" @bind-value="@login.Password" />
+            <ValidationMessage For="() => login.Password"></ValidationMessage>
+        </div>
+
+        <div>
+            <button class="btn btn-primary">Log In</button>
+            <div class="text-danger">@loginErrorMessage</div>
+        </div>
+        @*<ValidationSummary />*@
+    </div>
+</EditForm>
+
+@code {
+    LoginModel login = new LoginModel();
+    string loginErrorMessage = "";
+
+    private void LoginUser()
+    {
+        var username = login.UserName.ToLower().Trim();
+        var password = login.Password;
+
+        if (_db.ValidateLogin(username, password))
+        {
+            ((AuthStateProvider)_auth).LoginUser(username);
+            navigationManager.NavigateTo("/obs");
+        }
+        else
+        {
+            loginErrorMessage = "Invalid username/password.";
+        }
+    }
+}

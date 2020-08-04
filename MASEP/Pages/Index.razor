@@ -1,72 +1,84 @@
-﻿@page "/"
+﻿@page "/obs"
 @inherits IndexBase
-
-
 @* Header *@
-<div class="main shadow p-3 mb-2 bg-white rounded">
-    <div class="d-flex top-row">
-        <div class="p-2">
-            <h2>
-                MASEP Registration Form
-            </h2>
-            <h7 class="special">Data from MASEP participants is used for research purposes ONLY.</h7><br />
-            <h7 class="special">Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
+@*<div class="main shadow p-3 mb-2 bg-white rounded">
+        <div class="d-flex top-row">
+            <div class="p-2">
+                <h2>
+                    MASEP Registration Form
+                </h2>
+                <h7 class="special">Data from MASEP participants is used for research purposes ONLY.</h7><br />
+                <h7 class="special">Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
+            </div>
+            <div class="ml-auto" style="margin-top:auto;">
+                <a href="/login" target="_self">Logout</a>
+            </div>
         </div>
-        <div class="ml-auto" style="margin-top:auto;">
-            <a href="/login" target="_self">Logout</a>
-        </div>
-    </div>
-</div>
+    </div>*@
 
-@* Obs *@
-<EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData">
-    <div class="container border shadow">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="mt-2">
-            <ComponentContextRB Caption="Gender" items="@lstGender" respChanged="SelectionChanged"></ComponentContextRB>
-        </div>
-        <div>
-            <ComponentDD Caption="Race" items="@lstRace" respChanged="SelectionChanged"></ComponentDD>
-        </div>
-        <div>
-            <ComponentDD Caption="Marital" items="@lstMaritalStat" respChanged="SelectionChanged"></ComponentDD>
-        </div>
-        <div>
-            <ComponentDD Caption="Household Income" items="@lstIncome" respChanged="SelectionChanged"></ComponentDD>
-        </div>
-        <div>
-            <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
-            @*<InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged" />*@
-            <input type="date" onchange="DOBChanged" min="maxdate" max="@maxdate"/>
-        </div>
-        <div>
-            <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
-            <InputText class="form-control col-sm-1 custom-control-inline" @bind-Value="age" style="margin:10px 0px;" />
-        </div>
-        <div>
-            <ComponentDD Caption="Highest Level of Education" items="@lstEducation" respChanged="SelectionChanged"></ComponentDD>
-        </div>
-        <div>
-            <ComponentDD Caption="Employment Status" items="@lstEmpStat" respChanged="SelectionChanged"></ComponentDD>
-        </div>
+<AuthorizeView>
+    <Authorized>
+        @if (ObsList == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            @* Obs *@
+            <EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData" Context="_con">
+                <div class="container">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="mt-2">
+                        <ComponentContextRB Caption="Gender" items="@lstGender" respChanged="SelectionChanged"></ComponentContextRB>
+                    </div>
+                    <div>
+                        <ComponentDD Caption="Race" items="@lstRace" respChanged="SelectionChanged"></ComponentDD>
+                    </div>
+                    <div>
+                        <ComponentDD Caption="Marital" items="@lstMaritalStat" respChanged="SelectionChanged"></ComponentDD>
+                    </div>
+                    <div>
+                        <ComponentDD Caption="Household Income" items="@lstIncome" respChanged="SelectionChanged"></ComponentDD>
+                    </div>
+                    <div>
+                        <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
+                        @*<InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged" />*@
+                        <input type="date" onchange="DOBChanged" min="maxdate" max="@maxdate" />
+                    </div>
+                    <div>
+                        <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
+                        <InputText class="form-control col-sm-1 custom-control-inline" @bind-Value="age" style="margin:10px 0px;" />
+                    </div>
+                    <div>
+                        <ComponentDD Caption="Highest Level of Education" items="@lstEducation" respChanged="SelectionChanged"></ComponentDD>
+                    </div>
+                    <div>
+                        <ComponentDD Caption="Employment Status" items="@lstEmpStat" respChanged="SelectionChanged"></ComponentDD>
+                    </div>
 
-        @* Assessments *@
-        <div class="well well-sm">
-            <b>Please answer each question. Mark the appropriate response. Has this happened to you in the past year?</b>
-        </div>
-        <div>
-            @foreach (ObservationViewModel obs in ObsList)
-            {
-                <ComponentRBLeft @bind-resp="resp" @bind-resp:event="respChanged" Obs="@obs"></ComponentRBLeft>
-            }
-        </div>
+                    @* Assessments *@
+                    <div class="well well-sm">
+                        <b>Please answer each question. Mark the appropriate response. Has this happened to you in the past year?</b>
+                    </div>
+                    <div>
+                        @foreach (ObservationViewModel obs in ObsList)
+                        {
+                            <ComponentRBLeft @bind-resp="resp" @bind-resp:event="respChanged" Obs="@obs"></ComponentRBLeft>
+                        }
+                    </div>
 
-        @* Save *@
-        <div>
-            <button class="btn btn-primary" style="margin:10px;" type="submit">Submit</button>
-            <button class="btn btn-warning" style="margin:10px;" type="reset">Cancel</button>
-        </div>
-    </div>
+                    @* Save *@
+                    <div>
+                        <button class="btn btn-primary" style="margin:10px;" type="submit">Submit</button>
+                        <button class="btn btn-warning" style="margin:10px;" type="reset">Cancel</button>
+                    </div>
+                </div>
 
-</EditForm>
+            </EditForm>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <a href="/" target="_self">Please login</a>
+    </NotAuthorized>
+</AuthorizeView>

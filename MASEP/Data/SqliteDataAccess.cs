@@ -13,16 +13,21 @@ namespace MASEP.Data
 {
     public class SqliteDataAccess
     {
-        public string ConnectionStringName { get; set; } = "Default";
+        public string ConnectionStringName { get; set; } = "Obs";
         private readonly IConfiguration _config;
 
         public SqliteDataAccess(IConfiguration config)
         {
             _config = config;
         }
-        public string GetDataString<T, U>(string sql, U parameters)
+        public string GetDataString<T, U>(string sql, U parameters, string? con)
         {
-            string connecitonString = _config.GetConnectionString(ConnectionStringName);
+            string connecitonString;
+            if (con == null)
+                connecitonString = _config.GetConnectionString(ConnectionStringName);
+            else
+                connecitonString = _config.GetConnectionString(con);
+
             using (IDbConnection connection = new SQLiteConnection(connecitonString))
             {
                 try
@@ -76,23 +81,14 @@ namespace MASEP.Data
             }
             return rows;
         }
-        
+
         #region Login
-
-        //public int InsertUser(LoginModel login)
-        //{
-        //    string sql = @"Insert into obs_users(Username,Password)
-        //                    Values(@Username,@Password);";
-
-        //    return SaveData(sql, login);
-        //}
 
         public bool ValidateLogin(string username, string password)
         {
             string sql = "Select count(*) From obs_users where Username='" + username + "' and Password='" + password + "'";
-            string result = GetDataString<dynamic, dynamic>(sql, new { });
+            string result = GetDataString<dynamic, dynamic>(sql, new { },"Auth");
             return result == "0" ? false : true;
-
         }
 
         #endregion
@@ -106,7 +102,7 @@ namespace MASEP.Data
         {
             string sql = string.Empty;
             if (filter != null)
-                sql = "Select ObsId,ObsText From Meta_Observations where GrpId =" + filter+ " order by SortOrder";
+                sql = "Select ObsId,ObsText From Meta_Observations where GrpId =" + filter + " order by SortOrder";
             else
                 sql = "Select ObsId,ObsText From Meta_Observations order by SortOrder";
 
