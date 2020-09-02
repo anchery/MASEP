@@ -1,44 +1,81 @@
 ﻿@page "/"
-@inject NavigationManager navigationManager
+@page "/{id}"
+@inject NavigationManager _nav
 @inject SqliteDataAccess _db
 @inject AuthenticationStateProvider _auth
+@using Serilog;
 
-<EditForm class="form-group" Model="login" OnValidSubmit="LoginUser">
-    <DataAnnotationsValidator />
-    <div style="text-align: center;margin-top:50px;">
-        <div class="form-group">
-            Username:
-            <input type="text" @bind-value="@login.UserName" />
-            <ValidationMessage For="() => login.UserName"></ValidationMessage>
-        </div>
 
-        <div class="form-group">
-            Password:
-            <input type="password" @bind-value="@login.Password" />
-            <ValidationMessage For="() => login.Password"></ValidationMessage>
-        </div>
+@if (!IsConnected)
+{
+    <h2 class="text-danger">An error occurred while processing your request.</h2>
+    <h3 class="text-danger">Please contact the agency at 000-000-0000.</h3>
+}
+else
+{
+    <EditForm class="form-group" Model="login" OnValidSubmit="LoginUser">
+        <DataAnnotationsValidator />
+        <div style="text-align: center;margin-top:50px;">
+            <div class="form-group">
+                Username:
+                <input type="text" @bind-value="@login.UserName" />
+                <ValidationMessage For="() => login.UserName"></ValidationMessage>
+            </div>
 
-        <div>
-            <button class="btn btn-primary">Log In</button>
-            <div class="text-danger">@loginErrorMessage</div>
+            <div class="form-group">
+                Password:
+                <input type="password" @bind-value="@login.Password" />
+                <ValidationMessage For="() => login.Password"></ValidationMessage>
+            </div>
+
+            <div>
+                <button class="btn btn-primary">Log In</button>
+                <div class="text-danger">@loginErrorMessage</div>
+            </div>
+            @*<ValidationSummary />*@
         </div>
-        @*<ValidationSummary />*@
-    </div>
-</EditForm>
+    </EditForm>
+}
 
 @code {
+
+    [Parameter]
+    public int id { get; set; }
+
+    private bool IsConnected = false;
+
     LoginModel login = new LoginModel();
     string loginErrorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        if (!IsConnected)
+        {
+            Log.Information("Testing DB connection...");
+            IsConnected = _db.TestConnection();
+            if (IsConnected)
+                Log.Information("Connected.");
+            else
+                Log.Information("Connection failed!");
+        }
+        var url = _nav.Uri;
+    }
 
     private void LoginUser()
     {
         var username = login.UserName.ToLower().Trim();
         var password = login.Password;
 
-        if (_db.ValidateLogin(username, password))
+        //retake?
+        if (_db.IsRetake(username))
         {
+            loginErrorMessage = "Already Submitted.";
+        }
+        else if (_db.ValidateLogin(username, password))  //validate user
+        {
+            ((AuthStateProvider)_auth).Username = username;
             ((AuthStateProvider)_auth).LoginUser(username);
-            navigationManager.NavigateTo("/obs");
+            _nav.NavigateTo("/obs");
         }
         else
         {

@@ -1,20 +1,5 @@
 ﻿@page "/obs"
 @inherits IndexBase
-@* Header *@
-@*<div class="main shadow p-3 mb-2 bg-white rounded">
-        <div class="d-flex top-row">
-            <div class="p-2">
-                <h2>
-                    MASEP Registration Form
-                </h2>
-                <h7 class="special">Data from MASEP participants is used for research purposes ONLY.</h7><br />
-                <h7 class="special">Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
-            </div>
-            <div class="ml-auto" style="margin-top:auto;">
-                <a href="/login" target="_self">Logout</a>
-            </div>
-        </div>
-    </div>*@
 
 <AuthorizeView>
     <Authorized>
@@ -43,8 +28,8 @@
                     </div>
                     <div>
                         <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
-                        @*<InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged" />*@
-                        <input type="date" onchange="DOBChanged" min="maxdate" max="@maxdate" />
+                        @*<InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged" min="maxdate" max="@maxdate"/>*@
+                        <input type="date" @onchange="DOBChanged" />
                     </div>
                     <div>
                         <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
@@ -82,3 +67,20 @@
         <a href="/" target="_self">Please login</a>
     </NotAuthorized>
 </AuthorizeView>
+
+
+@* Header *@
+@*<div class="main shadow p-3 mb-2 bg-white rounded">
+        <div class="d-flex top-row">
+            <div class="p-2">
+                <h2>
+                    MASEP Registration Form
+                </h2>
+                <h7 class="special">Data from MASEP participants is used for research purposes ONLY.</h7><br />
+                <h7 class="special">Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
+            </div>
+            <div class="ml-auto" style="margin-top:auto;">
+                <a href="/login" target="_self">Logout</a>
+            </div>
+        </div>
+    </div>*@

@@ -1,29 +1,33 @@
 ﻿@using System.Collections
 @inject SqliteDataAccess _db
+@inject AuthenticationStateProvider _auth
+@inject NavigationManager _nav
+@inject IJSRuntime JsRuntime;
 
 @code {
-    protected AssessmentModel newObs = new AssessmentModel();
     protected List<MetaItemModel> lstGender;
     protected List<MetaItemModel> lstRace;
     protected List<MetaItemModel> lstMaritalStat;
     protected List<MetaItemModel> lstIncome;
     protected List<MetaItemModel> lstEducation;
     protected List<MetaItemModel> lstEmpStat;
-    protected string age="";
+    protected string age = string.Empty;
+    protected DateTime dob; //= DateTime.Today.ToString("yyyy-MM-dd");
     protected string maxdate = DateTime.Today.ToString("yyyy-MM-dd");
-    //private List<ObservationGroupModel> ObsGroups;
+
+    protected AssessmentModel newObs = new AssessmentModel();
     protected List<ObservationViewModel> ObsList = new List<ObservationViewModel>();
     private List<ObservationModel> obsItems;
     protected List<ResponseModel> resp = new List<ResponseModel>();
     private List<ResponseTypeModel> respType = new List<ResponseTypeModel>()
-    {
+{
             new ResponseTypeModel {ResponseId=1,ResponseText="Y"},
             new ResponseTypeModel {ResponseId=2,ResponseText="N"}
     };
 
     protected void SelectionChanged(DictionaryEntry val)
     {
-        int response = int.Parse(val.Value.ToString());
+        string response = val.Value.ToString();
         switch (val.Key.ToString())
         {
             case "Gender":
@@ -47,39 +51,101 @@
         }
     }
 
-    protected void DOBChanged()
+    protected void DOBChanged(ChangeEventArgs args)
     {
         //DateTime date1 = new DateTime(newObs.DOB.Year, newObs.DOB.Month, newObs.DOB.Day);
         try
         {
-            DateTime date1 = newObs.DOB;
-            DateTime date2 = DateTime.Today;
-            age = (date2.Year - date1.Year).ToString();
+            DateTime newDOB;
+            DateTime.TryParse(args.Value.ToString(), out dob);
+            //DateTime date2 = ;
+
+            age = (DateTime.Today.Year - dob.Year).ToString();
+            //Console.WriteLine(age);
             Console.WriteLine(age);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
 
-            throw;
         }
 
     }
 
-    protected void SaveData()
+    protected async void SaveData()
     {
-        //Save context items
-        //newObs.xxx
-        //Save observations
-        //foreach r in resp
+        try
+        {
+            //confirm - test it on mobile
+            bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
 
-        //TODO
-        //if success, reset model
-        //newObs = new AssessmentModel();
-        //Logout??
+            if (confirmed)
+            {
+                //Save context items
+                MasterModel model = new MasterModel();
 
-        Console.WriteLine("");
+                string serialNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+                model.SerialNo = serialNo;
 
+                model.Username = ((AuthStateProvider)_auth).Username;
+                model.AssessmentDate = DateTime.Now;
+
+                if (newObs.Gender != null)
+                    model.Gender = newObs.Gender;
+
+                if (newObs.Race != null)
+                    model.Race = newObs.Race;
+
+                if (newObs.MaritalStat != null)
+                    model.Marital = newObs.MaritalStat;
+
+                if (newObs.Income != null)
+                    model.Income = newObs.Income;
+
+                //check db
+                if (dob.ToString() != "1/1/0001 12:00:00 AM")
+                    model.DOB = dob.ToString();
+
+                //check db
+                if (age != string.Empty)
+                    model.Age = age;
+
+                //check db
+                if (newObs.Education != null)
+                    model.Education = newObs.Education;
+
+                if (newObs.EmpStat != null)
+                    model.Employment = newObs.EmpStat;
+
+                string sql = @"Insert Into OBS_Master (SerialNo,Username,AssessmentDate,Gender,Race,Marital,Income,DOB,Age,Education,Employment)" +
+                            " Values(@SerialNo,@Username,@AssessmentDate,@Gender,@Race,@Marital,@Income,@DOB,@Age,@Education,@Employment)";
+
+                var result = _db.SaveData(sql, model);
+
+                if (result == 1)
+                {
+                    //Save observations
+                    //foreach r in resp
+
+
+                    //if success, reset model
+                    newObs = new AssessmentModel();
+
+                    //Logout
+                    ((AuthStateProvider)_auth).LogoutUser();
+                    _nav.NavigateTo("/logout");
+                }
+
+                Console.WriteLine("");
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
+
     protected async void LoadMetaItems()
     {
         //string sql = "Select * From Meta_Items where ItemType='Gender' order by SortOrder";
@@ -92,6 +158,7 @@
         lstEducation = await _db.LoadMetaItems<MetaItemModel>("Education");
         lstEmpStat = await _db.LoadMetaItems<MetaItemModel>("Employment");
     }
+
     protected async void LoadMetaObservations()
     {
         try
@@ -115,4 +182,5 @@
         LoadMetaItems();
         LoadMetaObservations();
     }
+
 }

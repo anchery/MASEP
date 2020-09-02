@@ -9,10 +9,13 @@ namespace MASEP.Data
 {
     public class AuthStateProvider : AuthenticationStateProvider
     {
+        private string username;
+
+        public string Username { get => username; set => username = value; }
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             ClaimsIdentity identity;
-            
+
             identity = new ClaimsIdentity();
 
             //identity = new ClaimsIdentity(new[]

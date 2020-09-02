@@ -10,18 +10,18 @@ namespace MASEP.Models
     public class AssessmentModel
     {
         [Required]
-        public int Gender { get; set; } = -1;
-        public int Race { get; set; } = -1;
-        public int MaritalStat { get; set; } = -1;
-        public int Income { get; set; } = -1;
-        
-        [Required(ErrorMessage ="Date of birth is required.")]
-        public DateTime DOB { get; set; }
+        public string Gender { get; set; } = null;
+        public string Race { get; set; } = null;
+        public string MaritalStat { get; set; } = null;
+        public string Income { get; set; } = null;
 
-        public int Age { get; set; } = -1;
+        [Required(ErrorMessage = "Date of birth is required.")]
+        public string DOB { get; set; } = "MM/dd/yyyy";
 
-        public int Education { get; set; } = -1;
-        public int EmpStat { get; set; } = -1;
+        public string Age { get; set; } = null;
+
+        public string Education { get; set; } = null;
+        public string EmpStat { get; set; } = null;
 
         public List<Observation> Observations { get; set; }
     }
