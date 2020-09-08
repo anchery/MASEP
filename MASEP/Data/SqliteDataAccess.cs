@@ -20,6 +20,7 @@ namespace MASEP.Data
         {
             _config = config;
         }
+        
         public bool TestConnection()
         {
             string connecitonString = string.Empty;

@@ -14,7 +14,7 @@
                 <div class="container">
                     <DataAnnotationsValidator />
                     <ValidationSummary />
-                    <div class="mt-2">
+                    <div class="mt-2 mb-2">
                         <ComponentContextRB Caption="Gender" items="@lstGender" respChanged="SelectionChanged"></ComponentContextRB>
                     </div>
                     <div>
@@ -28,8 +28,7 @@
                     </div>
                     <div>
                         <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
-                        @*<InputDate @bind-Value="newObs.DOB" @onfocusout="DOBChanged" min="maxdate" max="@maxdate"/>*@
-                        <input type="date" @onchange="DOBChanged" />
+                        <input type="date" @onchange="DOBChanged" max="@maxdate" />
                     </div>
                     <div>
                         <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
@@ -42,21 +41,68 @@
                         <ComponentDD Caption="Employment Status" items="@lstEmpStat" respChanged="SelectionChanged"></ComponentDD>
                     </div>
 
-                    @* Assessments *@
+                    @* Group 1 - Ques 1 to 62 *@
                     <div class="well well-sm">
                         <b>Please answer each question. Mark the appropriate response. Has this happened to you in the past year?</b>
                     </div>
                     <div>
-                        @foreach (ObservationViewModel obs in ObsList)
+                        @foreach (ObservationViewModel obs in ObsList.Where(e => e.GrpId == 1))
                         {
                             <ComponentRBLeft @bind-resp="resp" @bind-resp:event="respChanged" Obs="@obs"></ComponentRBLeft>
+                        }
+                    </div>
+
+                    @* Group 2 - Ques 63 to 71 *@
+                    <div class="well well-sm">
+                        <b>In the LAST THREE MONTHS, how many times have you...</b>
+                    </div>
+                    <div>
+                        @foreach (ObservationViewModel obs in ObsList.Where(e => e.GrpId == 2))
+                        {
+                            <ComponentRBRight @bind-resp="resp" @bind-resp:event="respChanged" Obs="@obs" labelWidth="5"></ComponentRBRight>
+                        }
+                    </div>
+
+                    <div class="well well-sm">
+                        <b>In the PAST 5 YEARS, how many times have you...</b>
+                    </div>
+                    
+                    @* Q72 *@
+                    <div>
+                        <ComponentContextRB Caption="Had a traffic accident or wreck?"
+                                            items="@lstHowmany72" respChanged="SelectionChanged" labelWidth="5"></ComponentContextRB>
+                    </div>
+                    
+                    @* Q73 *@
+                    <div>
+                        <ComponentContextRB Caption="How many traffic tickets for moving violations have you ever received (e.g., speeding, running a red light, or a stop sign)?"
+                                            items="@lstHowmany73" respChanged="SelectionChanged" labelWidth="5"></ComponentContextRB>
+                    </div>
+          
+                    @* Q74 *@
+                    <div class="well well-sm mt-4">
+                        <b>Which of the following drugs did you use on the day of your arrest? Mark all that apply.</b>
+                    </div>
+                    <div>
+                        <ComponentCBLeft Caption="" items="@lstDrugs74" respChanged="SelectionChanged" labelWidth="2"></ComponentCBLeft>
+                    </div>
+
+                    @* Q75 *@
+                    <div class="well well-sm mt-2">
+                        <b>In the past 30 days, how often did you use the following drugs? Mark all that apply.</b>
+                    </div>
+                    <div>
+                        @foreach (MetaItemModel item in lstDrugs75)
+                        {
+                            <ComponentDD Caption="@item.ItemText" items="@lstFreq1" respChanged="SelectionChanged"
+                                     labelWidth="5" ddlWidth="2"></ComponentDD>
                         }
                     </div>
 
                     @* Save *@
                     <div>
                         <button class="btn btn-primary" style="margin:10px;" type="submit">Submit</button>
-                        <button class="btn btn-warning" style="margin:10px;" type="reset">Cancel</button>
+                        <button class="btn btn-warning" style="margin:10px;" type="reset" @onclick="ClearAll">Cancel</button>
                     </div>
                 </div>
 
