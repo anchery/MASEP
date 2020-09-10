@@ -9,11 +9,10 @@
         }
         else
         {
-            @* Obs *@
+            @* Context *@
             <EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData" Context="_con">
                 <div class="container">
                     <DataAnnotationsValidator />
-                    <ValidationSummary />
                     <div class="mt-2 mb-2">
                         <ComponentContextRB Caption="Gender" items="@lstGender" respChanged="SelectionChanged"></ComponentContextRB>
                     </div>
@@ -42,7 +41,7 @@
                     </div>
 
                     @* Group 1 - Ques 1 to 62 *@
-                    <div class="well well-sm">
+                    <div class="well well-sm text-info">
                         <b>Please answer each question. Mark the appropriate response. Has this happened to you in the past year?</b>
                     </div>
                     <div>
@@ -53,7 +52,7 @@
                     </div>
 
                     @* Group 2 - Ques 63 to 71 *@
-                    <div class="well well-sm">
+                    <div class="well well-sm text-success">
                         <b>In the LAST THREE MONTHS, how many times have you...</b>
                     </div>
                     <div>
@@ -63,49 +62,127 @@
                         }
                     </div>
 
-                    <div class="well well-sm">
+                    <div class="well well-sm text-warning">
                         <b>In the PAST 5 YEARS, how many times have you...</b>
                     </div>
-                    
+
                     @* Q72 *@
                     <div>
                         <ComponentContextRB Caption="Had a traffic accident or wreck?"
-                                            items="@lstHowmany72" respChanged="SelectionChanged" labelWidth="5"></ComponentContextRB>
+                                            items="@lstHowmany1" respChanged="SelectionChanged" labelWidth="5"></ComponentContextRB>
                     </div>
-                    
+
                     @* Q73 *@
                     <div>
                         <ComponentContextRB Caption="How many traffic tickets for moving violations have you ever received (e.g., speeding, running a red light, or a stop sign)?"
-                                            items="@lstHowmany73" respChanged="SelectionChanged" labelWidth="5"></ComponentContextRB>
+                                            items="@lstHowmany2" respChanged="SelectionChanged" labelWidth="5"></ComponentContextRB>
                     </div>
-          
+
                     @* Q74 *@
-                    <div class="well well-sm mt-4">
+                    <div class="well well-sm mt-4 text-danger">
                         <b>Which of the following drugs did you use on the day of your arrest? Mark all that apply.</b>
                     </div>
                     <div>
-                        <ComponentCBLeft Caption="" items="@lstDrugs74" respChanged="SelectionChanged" labelWidth="2"></ComponentCBLeft>
+                        <ComponentCBLeft Caption="" items="@lstDrugs1" respChanged="SelectionChanged" labelWidth="2"></ComponentCBLeft>
                     </div>
 
-                    @* Q75 *@
-                    <div class="well well-sm mt-2">
+                    @* Q75-81 *@
+                    <div class="well well-sm mt-2 text-primary">
                         <b>In the past 30 days, how often did you use the following drugs? Mark all that apply.</b>
                     </div>
                     <div>
-                        @foreach (MetaItemModel item in lstDrugs75)
+                        @foreach (MetaItemModel item in lstDrugs2)
                         {
                             <ComponentDD Caption="@item.ItemText" items="@lstFreq1" respChanged="SelectionChanged"
-                                     labelWidth="5" ddlWidth="2"></ComponentDD>
+                                         labelWidth="4" ddlWidth="2"></ComponentDD>
                         }
+                    </div>
+
+                    @* Q82 *@
+                    <div>
+                        <ComponentDD Caption="In the past 12 months, how often did you usually have at least one drink?"
+                                     items="@lstFreq2" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q83 *@
+                    <div>
+                        <ComponentDD Caption="If you go out drinking, how many places do you drink at in one evening? Include friends' or relatives' homes, as well as bars and restaurants?"
+                                     items="@lstPlaces" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q84 *@
+                    <div>
+                        <ComponentDD Caption="How many days of the week do you usually drink?"
+                                     items="@lstDays" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q85 *@
+                    <div>
+                        <ComponentDD Caption="When you are drinking, how many drinks do you usually have?"
+                                     items="@lstDrinks1" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q86 *@
+                    <div>
+                        <ComponentDD Caption="How often in the past 12 months did you have 5 or more drinks in a single day?"
+                                     items="@lstDrinks2" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q87 *@
+                    <div>
+                        <ComponentDD Caption="How often during the last year have you found that you were not able to stop drinking once you had started?"
+                                     items="@lstOften1" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q88 *@
+                    <div>
+                        <ComponentDD Caption="How often during the last year have you been unable to remember what happened the night before because you had been drinking?"
+                                     items="@lstOften1" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q89 *@
+                    <div>
+                        <ComponentDD Caption="Has a relative, friend, doctor, or other healthcare worked been concerned about your drinking or suggested you cut down?"
+                                     items="@lstOften2" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q90 *@
+                    <div>
+                        <ComponentDD Caption="I am always courteous even to people who are disagreeable."
+                                     items="@lstTrueFalse" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q91 *@
+                    <div>
+                        <ComponentDD Caption="There have been occasions when I took advantage of someone."
+                                     items="@lstTrueFalse" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q92 *@
+                    <div>
+                        <ComponentDD Caption="I sometimes try to get even rather than forgive and forget."
+                                     items="@lstTrueFalse" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q93 *@
+                    <div>
+                        <ComponentDD Caption="I sometimes feel resentful when I don't get my way."
+                                     items="@lstTrueFalse" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
+                    </div>
+
+                    @* Q94 *@
+                    <div>
+                        <ComponentDD Caption="No matter who I'm talking to, I'm always a good listener."
+                                     items="@lstTrueFalse" respChanged="SelectionChanged" labelWidth="4" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Save *@
                     <div>
-                        <button class="btn btn-primary" style="margin:10px;" type="submit">Submit</button>
-                        <button class="btn btn-warning" style="margin:10px;" type="reset" @onclick="ClearAll">Cancel</button>
+                        <button class="btn btn-primary mt-2" type="submit">Submit</button>
+                        <button class="btn btn-warning mt-2" type="reset" @onclick="ClearAll">Cancel</button>
                     </div>
+                    <ValidationSummary />
                 </div>
-
             </EditForm>
         }
     </Authorized>
@@ -114,19 +191,3 @@
     </NotAuthorized>
 </AuthorizeView>
 
-
-@* Header *@
-@*<div class="main shadow p-3 mb-2 bg-white rounded">
-        <div class="d-flex top-row">
-            <div class="p-2">
-                <h2>
-                    MASEP Registration Form
-                </h2>
-                <h7 class="special">Data from MASEP participants is used for research purposes ONLY.</h7><br />
-                <h7 class="special">Your personal information is NEVER shared with any individuals or agencies outside MASEP.</h7>
-            </div>
-            <div class="ml-auto" style="margin-top:auto;">
-                <a href="/login" target="_self">Logout</a>
-            </div>
-        </div>
-    </div>*@

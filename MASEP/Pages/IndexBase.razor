@@ -15,14 +15,15 @@
     protected DateTime dob; //= DateTime.Today.ToString("yyyy-MM-dd");
     protected string maxdate = DateTime.Today.ToString("yyyy-MM-dd");
     protected string trafficTickets = string.Empty;
-    protected Dictionary<string,int>drugs = new Dictionary<string, int>();
+    protected Dictionary<string, int> drugs = new Dictionary<string, int>();
     private List<ObservationModel> obsItems;
-    protected List<ResponseModel> resp=new List<ResponseModel>();
+    protected List<ResponseModel> resp = new List<ResponseModel>();
     protected AssessmentModel newObs = new AssessmentModel();
     protected List<ObservationViewModel> ObsList = new List<ObservationViewModel>();
 
-    protected List<MetaItemModel> lstHowmany72 = new List<MetaItemModel>()
-    {
+    //Q72
+    protected List<MetaItemModel> lstHowmany1 = new List<MetaItemModel>()
+{
         new MetaItemModel { ItemId=0, ItemText = "0"},
         new MetaItemModel { ItemId=1, ItemText = "1"},
         new MetaItemModel { ItemId=2, ItemText = "2"},
@@ -30,8 +31,10 @@
         new MetaItemModel { ItemId=4, ItemText = "4"},
         new MetaItemModel { ItemId=5, ItemText = "5+"}
     };
-    protected List<MetaItemModel> lstHowmany73 = new List<MetaItemModel>()
-    {
+
+    //Q73
+    protected List<MetaItemModel> lstHowmany2 = new List<MetaItemModel>()
+{
         new MetaItemModel { ItemId=0, ItemText = "0"},
         new MetaItemModel { ItemId=1, ItemText = "1"},
         new MetaItemModel { ItemId=2, ItemText = "2"},
@@ -42,13 +45,14 @@
         new MetaItemModel { ItemId=7, ItemText = "7"},
         new MetaItemModel { ItemId=8, ItemText = "8 or more"}
     };
+
     protected List<ResponseTypeModel> lstRespYN = new List<ResponseTypeModel>()
-    {
+{
             new ResponseTypeModel {ResponseId=1,ResponseText="Y"},
             new ResponseTypeModel {ResponseId=2,ResponseText="N"}
     };
     protected List<ResponseTypeModel> lstResp05 = new List<ResponseTypeModel>()
-    {
+{
             new ResponseTypeModel {ResponseId=0,ResponseText="0"},
             new ResponseTypeModel {ResponseId=1,ResponseText="1"},
             new ResponseTypeModel {ResponseId=2,ResponseText="2"},
@@ -57,16 +61,19 @@
             new ResponseTypeModel {ResponseId=5,ResponseText="5+"},
     };
 
-    protected List<MetaItemModel> lstDrugs74 = new List<MetaItemModel>()
-    {
+    //Q74
+    protected List<MetaItemModel> lstDrugs1 = new List<MetaItemModel>()
+{
             new MetaItemModel {ItemId=0,ItemText="Prescription pain medication"},
             new MetaItemModel {ItemId=1,ItemText="Prescription medicine for anxiety, sleep problems, or depression"},
             new MetaItemModel {ItemId=2,ItemText="Other medicine with a warning label about driving or operating heavy machinery"},
             new MetaItemModel {ItemId=3,ItemText="Marijuana"},
             new MetaItemModel {ItemId=4,ItemText="Other illegal drugs, such as cocaine..."}
     };
-    protected List<MetaItemModel> lstDrugs75 = new List<MetaItemModel>()
-    {
+
+    @* Q75-81 *@
+    protected List<MetaItemModel> lstDrugs2 = new List<MetaItemModel>()
+{
             new MetaItemModel {ItemId=0,ItemText="Alcohol"},
             new MetaItemModel {ItemId=1,ItemText="Prescription pain medication"},
             new MetaItemModel {ItemId=2,ItemText="Prescription medicine for anxiety, sleep problems, or depression"},
@@ -75,8 +82,9 @@
             new MetaItemModel {ItemId=5,ItemText="Other illegal drugs, such as cocaine..."},
             new MetaItemModel {ItemId=6,ItemText="None, not even alcohol"},
     };
+
     protected List<MetaItemModel> lstFreq1 = new List<MetaItemModel>()
-    {
+{
             new MetaItemModel {ItemId=0,ItemText="Everyday"},
             new MetaItemModel {ItemId=1,ItemText="Nearly Everyday"},
             new MetaItemModel {ItemId=2,ItemText="3-4 days per week"},
@@ -84,38 +92,125 @@
             new MetaItemModel {ItemId=4,ItemText="1-3 days per month"},
             new MetaItemModel {ItemId=5,ItemText="Zero/No use"}
     };
+    protected List<MetaItemModel> lstFreq2 = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="Everyday"},
+            new MetaItemModel {ItemId=1,ItemText="Nearly Everyday"},
+            new MetaItemModel {ItemId=2,ItemText="3-4 days per week"},
+            new MetaItemModel {ItemId=3,ItemText="1-2 days per week"},
+            new MetaItemModel {ItemId=4,ItemText="1-3 days per month"},
+            new MetaItemModel {ItemId=5,ItemText="Less than once a month"},
+            new MetaItemModel {ItemId=6,ItemText="Did not drink in the past 12 months"}
+    };
+
+    //Q83
+    protected List<MetaItemModel> lstPlaces = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="None, I don't drink alcohol"},
+            new MetaItemModel {ItemId=1,ItemText="None, I only drink at home"},
+            new MetaItemModel {ItemId=2,ItemText="1 place"},
+            new MetaItemModel {ItemId=3,ItemText="2 places"},
+            new MetaItemModel {ItemId=4,ItemText="3 or 4 places"},
+            new MetaItemModel {ItemId=5,ItemText="5 or more places"}
+    };
+
+    //Q84
+    protected List<MetaItemModel> lstDays = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="I don't drink"},
+            new MetaItemModel {ItemId=1,ItemText="I drink less than once a week"},
+            new MetaItemModel {ItemId=2,ItemText="I drink 1 day per week"},
+            new MetaItemModel {ItemId=3,ItemText="I drink 2 or 3 days per week"},
+            new MetaItemModel {ItemId=4,ItemText="I drink 4 or 5 days per week"},
+            new MetaItemModel {ItemId=5,ItemText="I drink 6 or 7 days per week"}
+    };
+
+    //Q85
+    protected List<MetaItemModel> lstDrinks1 = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="I don't drink"},
+            new MetaItemModel {ItemId=1,ItemText="1 or 2 drinks"},
+            new MetaItemModel {ItemId=2,ItemText="3 or 4 drinks"},
+            new MetaItemModel {ItemId=3,ItemText="5 or 6 drinks"},
+            new MetaItemModel {ItemId=4,ItemText="7 to 9 drinks"},
+            new MetaItemModel {ItemId=5,ItemText="10 to 12 drinks"},
+            new MetaItemModel {ItemId=6,ItemText="13 to 15 drinks"},
+            new MetaItemModel {ItemId=7,ItemText="16 to 20 drinks"},
+            new MetaItemModel {ItemId=8,ItemText="More than 20 drinks"}
+    };
+
+    //Q86
+    protected List<MetaItemModel> lstDrinks2 = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="Everyday"},
+            new MetaItemModel {ItemId=1,ItemText="Nearly Everyday"},
+            new MetaItemModel {ItemId=2,ItemText="3 to 4 days per week"},
+            new MetaItemModel {ItemId=3,ItemText="1 to 2 days per week"},
+            new MetaItemModel {ItemId=4,ItemText="1 to 3 days per month"},
+            new MetaItemModel {ItemId=5,ItemText="Less than once a month"},
+            new MetaItemModel {ItemId=6,ItemText="did not drink in the past 12 months"}
+    };
+
+    //Q87-88
+    protected List<MetaItemModel> lstOften1 = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="Never"},
+            new MetaItemModel {ItemId=1,ItemText="Less than monthly"},
+            new MetaItemModel {ItemId=2,ItemText="Monthly"},
+            new MetaItemModel {ItemId=3,ItemText="Two to three times per week"},
+            new MetaItemModel {ItemId=4,ItemText="Four or more times per week"}
+    };
+
+    //Q89
+    protected List<MetaItemModel> lstOften2 = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="No"},
+            new MetaItemModel {ItemId=1,ItemText="Yes, but not in the last year"},
+            new MetaItemModel {ItemId=2,ItemText="Yes, during the last year"}
+    };
+
+    //Q90-94
+    protected List<MetaItemModel> lstTrueFalse = new List<MetaItemModel>()
+{
+            new MetaItemModel {ItemId=0,ItemText="Definitely True"},
+            new MetaItemModel {ItemId=1,ItemText="Mostly True"},
+            new MetaItemModel {ItemId=2,ItemText="Don't Know"},
+            new MetaItemModel {ItemId=3,ItemText="Mostly False"},
+            new MetaItemModel {ItemId=4,ItemText="Definitely False"}
+    };
 
     protected void SelectionChanged(DictionaryEntry val)
     {
+        //TODO - breaking on gender
         string response = val.Value.ToString();
-        switch (val.Key.ToString().Substring(0,20))
-        {
-            case "Gender":
-                newObs.Gender = response;
-                break;
-            case "Race":
-                newObs.Race = response;
-                break;
-            case "Marital":
-                newObs.MaritalStat = response;
-                break;
-            case "Household Income":
-                newObs.Income = response;
-                break;
-            case "Highest Level of Education":
-                newObs.Education = response;
-                break;
-            case "Employment Status":
-                newObs.EmpStat = response;
-                break;
-            case "How many traffic":
-                trafficTickets = response;
-                break;
-            case "Prescription pain me":
-            case "Prescription medicin":
-                drugs[val.Key.ToString()]=(int)val.Value;
-                break;
-        }
+        //switch (val.Key.ToString().Substring(0,20))
+        //{
+        //    case "Gender":
+        //        newObs.Gender = response;
+        //        break;
+        //    case "Race":
+        //        newObs.Race = response;
+        //        break;
+        //    case "Marital":
+        //        newObs.MaritalStat = response;
+        //        break;
+        //    case "Household Income":
+        //        newObs.Income = response;
+        //        break;
+        //    case "Highest Level of Education":
+        //        newObs.Education = response;
+        //        break;
+        //    case "Employment Status":
+        //        newObs.EmpStat = response;
+        //        break;
+        //    case "How many traffic":
+        //        trafficTickets = response;
+        //        break;
+        //    case "Prescription pain me":
+        //    case "Prescription medicin":
+        //        drugs[val.Key.ToString()]=(int)val.Value;
+        //        break;
+        //}
     }
 
     protected void DOBChanged(ChangeEventArgs args)

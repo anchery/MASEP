@@ -9,7 +9,7 @@ namespace MASEP.Models
 {
     public class AssessmentModel
     {
-        [Required]
+        [Required(ErrorMessage ="Gender is required.")]
         public string Gender { get; set; } = null;
         public string Race { get; set; } = null;
         public string MaritalStat { get; set; } = null;
