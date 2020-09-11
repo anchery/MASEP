@@ -22,6 +22,11 @@ namespace MASEP.Models
 
         public string Education { get; set; } = null;
         public string EmpStat { get; set; } = null;
+        public string Q74a { get; set; } = null;
+        public string Q74b { get; set; } = null;
+        public string Q74c { get; set; } = null;
+        public string Q74d { get; set; } = null;
+        public string Q74e { get; set; } = null;
 
         public List<Observation> Observations { get; set; }
     }
