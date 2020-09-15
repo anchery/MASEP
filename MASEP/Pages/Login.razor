@@ -17,14 +17,14 @@ else
         <DataAnnotationsValidator />
         <div style="text-align: center;margin-top:50px;">
             <div class="form-group">
-                Username:
+                Email Address:
                 <input type="text" @bind-value="@login.UserName" />
                 <ValidationMessage For="() => login.UserName"></ValidationMessage>
             </div>
 
             <div class="form-group">
-                Password:
-                <input type="password" @bind-value="@login.Password" />
+                <span class="ml-4">Password:</span> 
+                <input class="ml-1" type="password" @bind-value="@login.Password" />
                 <ValidationMessage For="() => login.Password"></ValidationMessage>
             </div>
 

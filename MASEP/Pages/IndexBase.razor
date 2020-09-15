@@ -81,8 +81,7 @@
             new MetaItemModel {ItemId=77,ItemText="Prescription medicine for anxiety, sleep problems, or depression"},
             new MetaItemModel {ItemId=78,ItemText="Other medicine with a warning label about driving or operating heavy machinery"},
             new MetaItemModel {ItemId=79,ItemText="Marijuana"},
-            new MetaItemModel {ItemId=80,ItemText="Other illegal drugs, such as cocaine..."},
-            new MetaItemModel {ItemId=81,ItemText="None, not even alcohol"},
+            new MetaItemModel {ItemId=80,ItemText="Other illegal drugs, such as cocaine..."}
     };
     @* Q90-94 *@
 protected List<MetaItemModel> lstBehavior = new List<MetaItemModel>()
@@ -192,7 +191,7 @@ protected List<MetaItemModel> lstTrueFalse = new List<MetaItemModel>()
 protected void AddResponse(DictionaryEntry val)
 {
     string response = val.Value.ToString();
-    resp.Add(new ResponseModel { ObsId = int.Parse(val.Key.ToString().Replace("Q","")), Response = int.Parse(response) });
+    resp.Add(new ResponseModel { ObsId = int.Parse(val.Key.ToString().Replace("Q", "")), Response = int.Parse(response) });
 }
 
 protected void SelectionChanged(DictionaryEntry val)
@@ -334,12 +333,6 @@ protected async void SaveData()
     }
 }
 
-protected void ClearAll()
-{
-    age = "";
-    newObs = new AssessmentModel();
-}
-
 protected async void LoadMetaItems()
 {
     lstGender = await _db.LoadMetaItems<MetaItemModel>("Gender");
@@ -382,6 +375,11 @@ protected override void OnInitialized()
 {
     LoadMetaItems();
     LoadMetaObservations();
+}
+
+protected void Test()
+{
+    _nav.NavigateTo("/logout",true);
 }
 
 }

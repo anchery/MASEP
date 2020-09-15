@@ -95,57 +95,57 @@
                         {
                             string qno = "Q" + item.ItemId.ToString();
                             <ComponentDD Caption="@item.ItemText" items="@lstFreq1" respChanged="AddResponse"
-                                         labelWidth="4" ddlWidth="2" key="@qno"></ComponentDD>
-                            ctr++;
+                                         labelWidth="6" ddlWidth="2" key="@qno"></ComponentDD>
+                            //ctr++;
                         }
                     </div>
 
                     @* Q82 *@
                     <div>
                         <ComponentDD Caption="In the past 12 months, how often did you usually have at least one drink?"
-                                     items="@lstFreq2" key="Q82" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstFreq2" key="Q82" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q83 *@
                     <div>
                         <ComponentDD Caption="If you go out drinking, how many places do you drink at in one evening? Include friends' or relatives' homes, as well as bars and restaurants?"
-                                     items="@lstPlaces" key="Q83" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstPlaces" key="Q83" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q84 *@
                     <div>
                         <ComponentDD Caption="How many days of the week do you usually drink?"
-                                     items="@lstDays" key="Q84" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstDays" key="Q84" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q85 *@
                     <div>
                         <ComponentDD Caption="When you are drinking, how many drinks do you usually have?"
-                                     items="@lstDrinks1" key="Q85" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstDrinks1" key="Q85" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q86 *@
                     <div>
                         <ComponentDD Caption="How often in the past 12 months did you have 5 or more drinks in a single day?"
-                                     items="@lstDrinks2" key="Q86" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstDrinks2" key="Q86" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q87 *@
                     <div>
                         <ComponentDD Caption="How often during the last year have you found that you were not able to stop drinking once you had started?"
-                                     items="@lstOften1" key="Q87" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstOften1" key="Q87" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q88 *@
                     <div>
                         <ComponentDD Caption="How often during the last year have you been unable to remember what happened the night before because you had been drinking?"
-                                     items="@lstOften1" key="Q88" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstOften1" key="Q88" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
 
                     @* Q89 *@
                     <div>
                         <ComponentDD Caption="Has a relative, friend, doctor, or other healthcare worked been concerned about your drinking or suggested you cut down?"
-                                     items="@lstOften2" key="Q82" respChanged="AddResponse" labelWidth="4" ddlWidth="2"></ComponentDD>
+                                     items="@lstOften2" key="Q82" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
                     
                     @* Q90-94 *@
@@ -154,15 +154,15 @@
                         {
                             string qno = "Q" + item.ItemId.ToString();
                             <ComponentDD Caption="@item.ItemText" items="@lstTrueFalse" respChanged="AddResponse"
-                                         labelWidth="4" ddlWidth="2" key="@qno"></ComponentDD>
-                            ctr++;
+                                         labelWidth="6" ddlWidth="2" key="@qno"></ComponentDD>
+                            //ctr++;
                         }
                     </div>
 
                     @* Save *@
                     <div>
                         <button class="btn btn-primary mt-2" type="submit">Submit</button>
-                        <button class="btn btn-warning mt-2" type="reset" @onclick="ClearAll">Cancel</button>
+                        <button class="btn btn-warning mt-2" type="reset" @onclick="Test">Cancel</button>
                     </div>
                     <ValidationSummary />
                 </div>
