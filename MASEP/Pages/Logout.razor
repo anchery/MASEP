@@ -1,13 +1,12 @@
 ﻿@page "/logout"
 @inject AuthenticationStateProvider _auth
 
-<h1>Thank you for submitting the assessment!</h1>
+<h3>Your assessment has been submitted. Feedback will be provided during Session 3.</h3>
 
 @code { 
     
     protected override void OnInitialized()
     {
         ((AuthStateProvider)_auth).LogoutUser();
-        //base.OnInitialized();
     }
 }

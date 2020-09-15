@@ -43,6 +43,7 @@ else
     public int id { get; set; }
 
     private bool IsConnected = false;
+    private int retryCount = 0;
 
     LoginModel login = new LoginModel();
     string loginErrorMessage = "";
@@ -69,7 +70,7 @@ else
         //retake?
         if (_db.IsRetake(username))
         {
-            loginErrorMessage = "Already Submitted.";
+            loginErrorMessage = "This assessment has already been completed.";
         }
         else if (_db.ValidateLogin(username, password))  //validate user
         {
@@ -79,7 +80,17 @@ else
         }
         else
         {
-            loginErrorMessage = "Invalid username/password.";
+            if(retryCount == 3)
+            {
+                loginErrorMessage = "Please review the login credentials provided in your MASEP registration email.";
+                retryCount = 0;
+            }
+            else
+            {
+                loginErrorMessage = "Invalid username/password.";
+                retryCount++;
+            }
+
         }
     }
 }

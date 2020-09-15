@@ -14,34 +14,50 @@
                 <div class="container">
                     <DataAnnotationsValidator />
                     <div class="mt-2 mb-2">
-                        <ComponentContextRB Caption="Gender" items="@lstGender" key="Q10" respChanged="SelectionChanged"></ComponentContextRB>
+                        <ComponentContextRB Caption="Gender" items="@lstGender" key="Q10" labelWidth="4" respChanged="SelectionChanged"></ComponentContextRB>
                     </div>
                     <div>
-                        <ComponentDD Caption="Race" items="@lstRace" key="Q11" respChanged="SelectionChanged"></ComponentDD>
+                        <ComponentDD Caption="Race" items="@lstRace" key="Q11" labelWidth="4" respChanged="SelectionChanged"></ComponentDD>
                     </div>
                     <div>
-                        <ComponentDD Caption="Marital" items="@lstMaritalStat" key="Q12" respChanged="SelectionChanged"></ComponentDD>
+                        <ComponentDD Caption="Marital" items="@lstMaritalStat" key="Q12" labelWidth="4" respChanged="SelectionChanged"></ComponentDD>
                     </div>
                     <div>
-                        <ComponentDD Caption="Household Income" items="@lstIncome" key="Q13" respChanged="SelectionChanged"></ComponentDD>
+                        <ComponentDD Caption="Household Income" items="@lstIncome" key="Q13" labelWidth="4" respChanged="SelectionChanged"></ComponentDD>
                     </div>
                     <div>
-                        <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Date of birth</label>
+                        <label class="control-label col-sm-4" style="margin:0px;padding:0px;">Date of birth</label>
                         <input type="date" @onchange="DOBChanged" max="@maxdate" />
                     </div>
                     <div>
-                        <label class="control-label col-sm-3" style="margin:0px;padding:0px;">Age</label>
-                        <InputText class="form-control col-sm-1 custom-control-inline" @bind-Value="age" style="margin:10px 0px;" />
+                        <label class="control-label col-sm-4" style="margin:0px;padding:0px;">Age</label>
+                        <InputText type="number" min="17" max ="80" class="form-control col-sm-1 custom-control-inline" @bind-Value="age" style="margin:10px 0px;" />
                     </div>
                     <div>
-                        <ComponentDD Caption="Highest Level of Education" items="@lstEducation" key="Q16" respChanged="SelectionChanged"></ComponentDD>
+                        <ComponentDD Caption="Highest Level of Education" items="@lstEducation" key="Q16" labelWidth="4" respChanged="SelectionChanged"></ComponentDD>
                     </div>
                     <div>
-                        <ComponentDD Caption="Employment Status" items="@lstEmpStat" key="Q17" respChanged="SelectionChanged"></ComponentDD>
+                        <ComponentDD Caption="Employment Status" items="@lstEmpStat" key="Q17" labelWidth="4" respChanged="SelectionChanged"></ComponentDD>
+                    </div>
+                    <div>
+                        <label class="control-label col-sm-4" style="margin:0px;padding:0px;">When did you get arrested for DUI?</label>
+                        <InputText type="number" @bind-Value="duiMonths" class="form-control col-sm-1 custom-control-inline mt-1" />
+                    </div>
+                    <div>
+                        <label class="control-label col-sm-4" style="margin:0px;padding:0px;">How old were you the very first time you ever drank an alcoholic beverage?</label>
+                        <InputText type="number" @bind-Value="ageFirstDrink" class="form-control col-sm-1 custom-control-inline" />
+                    </div>
+                    <div>
+                        <label class="control-label col-sm-4" style="margin:0px;padding:0px;">How old were you the first time you were arrested for any reason?</label>
+                        <InputText type="number" @bind-Value="ageFirstArrest" class="form-control col-sm-1 custom-control-inline mt-1" />
+                    </div>
+                    <div>
+                        <label class="control-label col-sm-4" style="margin:0px;padding:0px;">How many times in your life have you been arrested for driving under the influence of alcohol or another drug?</label>
+                        <InputText type="number" @bind-Value="timesArrested" class="form-control col-sm-1 custom-control-inline" />
                     </div>
 
                     @* Group 1 - Ques 1 to 62 *@
-                    <div class="well well-sm text-info">
+                    <div class="well well-sm">
                         <b>Please answer each question. Mark the appropriate response. Has this happened to you in the past year?</b>
                     </div>
                     <div>
@@ -52,7 +68,7 @@
                     </div>
 
                     @* Group 2 - Ques 63 to 71 *@
-                    <div class="well well-sm text-success">
+                    <div class="well well-sm">
                         <b>In the LAST THREE MONTHS, how many times have you...</b>
                     </div>
                     <div>
@@ -62,7 +78,7 @@
                         }
                     </div>
 
-                    <div class="well well-sm text-warning">
+                    <div class="well well-sm">
                         <b>In the PAST 5 YEARS, how many times have you...</b>
                     </div>
 
@@ -79,7 +95,7 @@
                     </div>
 
                     @* Q74 *@
-                    <div class="well well-sm mt-4 text-danger">
+                    <div class="well well-sm mt-4">
                         <b>Which of the following drugs did you use on the day of your arrest? Mark all that apply.</b>
                     </div>
                     <div>
@@ -87,7 +103,7 @@
                     </div>
 
                     @* Q75-81 *@
-                    <div class="well well-sm mt-2 text-primary">
+                    <div class="well well-sm mt-2">
                         <b>In the past 30 days, how often did you use the following drugs? Mark all that apply.</b>
                     </div>
                     <div>
@@ -96,7 +112,6 @@
                             string qno = "Q" + item.ItemId.ToString();
                             <ComponentDD Caption="@item.ItemText" items="@lstFreq1" respChanged="AddResponse"
                                          labelWidth="6" ddlWidth="2" key="@qno"></ComponentDD>
-                            //ctr++;
                         }
                     </div>
 
@@ -147,7 +162,7 @@
                         <ComponentDD Caption="Has a relative, friend, doctor, or other healthcare worked been concerned about your drinking or suggested you cut down?"
                                      items="@lstOften2" key="Q82" respChanged="AddResponse" labelWidth="6" ddlWidth="2"></ComponentDD>
                     </div>
-                    
+
                     @* Q90-94 *@
                     <div>
                         @foreach (MetaItemModel item in lstBehavior)
@@ -155,12 +170,11 @@
                             string qno = "Q" + item.ItemId.ToString();
                             <ComponentDD Caption="@item.ItemText" items="@lstTrueFalse" respChanged="AddResponse"
                                          labelWidth="6" ddlWidth="2" key="@qno"></ComponentDD>
-                            //ctr++;
                         }
                     </div>
 
                     @* Save *@
-                    <div>
+                    <div class="mb-2">
                         <button class="btn btn-primary mt-2" type="submit">Submit</button>
                         <button class="btn btn-warning mt-2" type="reset" @onclick="Test">Cancel</button>
                     </div>
