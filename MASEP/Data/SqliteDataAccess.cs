@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
+using Serilog;
+using System.IO;
 
 namespace MASEP.Data
 {
@@ -25,7 +27,26 @@ namespace MASEP.Data
         {
             string connecitonString = string.Empty;
             connecitonString = _config.GetConnectionString(ConnectionStringName);
+            
+            //Auth db exists?
+            string authConStr = _config.GetConnectionString("Auth");
+            string authDbFile = authConStr.Split(";")[0].Replace("Data Source=", "");
+            if (!File.Exists(authDbFile))
+            {
+                Log.Error("DB not found-" + authDbFile);
+                return false;
+            }
+            
+            //Obs db exists?
+            string obsConStr = _config.GetConnectionString("Obs");
+            string obsDbFile = obsConStr.Split(";")[0].Replace("Data Source=", "");
+            if (!File.Exists(obsDbFile))
+            {
+                Log.Error("DB not found-" + obsDbFile);
+                return false;
+            }
 
+            //if(connecitonString.Split(";")[0].Replace("Data Source=", ""))
             using (IDbConnection connection = new SQLiteConnection(connecitonString))
             {
                 try
@@ -33,16 +54,16 @@ namespace MASEP.Data
                     connection.Open();
                     if (connection.State == ConnectionState.Open)
                     {
-                        string sql = "Select * From Meta_Observations";
+                        string sql = "Select Count(*) From Meta_Observations";
                         string result = GetDataString<dynamic, dynamic>(sql, new { }, "");
                         return (result == "0" || result == "") ? false : true;
                     }
-
                     else
                         return false;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Log.Error(e.Message);
                     return false;
                 }
             }
@@ -68,7 +89,7 @@ namespace MASEP.Data
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Log.Error(e.Message);
                     return "";
                 }
             }
@@ -87,7 +108,7 @@ namespace MASEP.Data
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Error(e.Message);
                 return null;
             }
 
@@ -106,8 +127,7 @@ namespace MASEP.Data
             }
             catch (Exception e)
             {
-
-                //Console.WriteLine(e.Message);
+                Log.Error(e.Message);
                 return 0;
             }
             return rows;
@@ -115,33 +135,33 @@ namespace MASEP.Data
 
         public bool ValidateLogin(string username, string password)
         {
-            string sql = "Select count(*) From obs_users where Username='" + username + "' and Password='" + password + "'";
-            string result = GetDataString<dynamic, dynamic>(sql, new { }, "Auth");
+            string sql = "Select count(*) From obs_users where Username=@username and Password=@password";
+            string result = GetDataString<dynamic, dynamic>(sql, new { @username = username, @password = password }, "Auth");
             return result == "0" ? false : true;
         }
         
         public bool IsRetake(string username)
         {
-            string sql = "Select * From Obs_Master where Username=@Username";
+            string sql = "Select Count(*) From ParticipantsDetail where ParticipantsID=@Username";
             string result = GetDataString<dynamic, dynamic>(sql, new {@Username = username}, "Obs");
-            return result == "" ? false : true;
+            return result == "0" ? false : true;
         }
 
         public async Task<List<T>> LoadMetaItems<T>(string itemType)
         {
-            string sql = "Select * From Meta_Items where ItemType='" + itemType + "' order by SortOrder";
-            return await LoadData<T, dynamic>(sql, new { });
+            string sql = "Select * From Meta_Items where ItemType=@itemType order by SortOrder";
+            return await LoadData<T, dynamic>(sql, new { @itemType = itemType });
         }
 
         public Task<List<ObservationModel>> LoadMetaObservations(string filter)
         {
             string sql = string.Empty;
             if (filter != null)
-                sql = "Select ObsId,ObsText From Meta_Observations where GrpId =" + filter + " order by SortOrder";
+                sql = "Select ObsId,ObsText From Meta_Observations where GrpId=@filter order by SortOrder";
             else
                 sql = "Select ObsId,ObsText From Meta_Observations order by SortOrder";
 
-            return LoadData<ObservationModel, dynamic>(sql, new { });
+            return LoadData<ObservationModel, dynamic>(sql, new {@filter = filter });
         }
     }
 }

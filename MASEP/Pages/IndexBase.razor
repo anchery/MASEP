@@ -2,9 +2,12 @@
 @inject SqliteDataAccess _db
 @inject AuthenticationStateProvider _auth
 @inject NavigationManager _nav
-@inject IJSRuntime JsRuntime;
+@inject IJSRuntime JsRuntime
 
 @code {
+    protected string validationErrorMessage = "";
+    protected string dobError = "";
+    protected bool isValid = true;
     protected List<MetaItemModel> lstGender;
     protected List<MetaItemModel> lstRace;
     protected List<MetaItemModel> lstMaritalStat;
@@ -16,12 +19,10 @@
     protected string ageFirstDrink = string.Empty;
     protected string ageFirstArrest = string.Empty;
     protected string timesArrested = string.Empty;
-
-    protected DateTime dob; //= DateTime.Today.ToString("yyyy-MM-dd");
-    protected string maxdate = DateTime.Today.ToString("yyyy-MM-dd");
+    protected string dob = string.Empty; //= DateTime.Today.ToString("yyyy-MM-dd");
+    protected string maxdate = DateTime.Now.AddYears(-17).ToString();//DateTime.Today.ToString("yyyy-MM-dd");
     protected string trafficTickets = string.Empty;
     protected string accidents = string.Empty;
-
     protected Dictionary<string, int> drugs = new Dictionary<string, int>();
     private List<ObservationModel> obsItems;
     protected List<ResponseModel> resp = new List<ResponseModel>();
@@ -208,10 +209,10 @@ protected void SelectionChanged(DictionaryEntry val)
             newObs.Gender = response;
             break;
         case "Q11": //Race
-            newObs.Race = response;
+            newObs.Ethnicity = response;
             break;
         case "Q12": //Marital
-            newObs.MaritalStat = response;
+            newObs.Marital = response;
             break;
         case "Q13": //Income
             newObs.Income = response;
@@ -220,7 +221,7 @@ protected void SelectionChanged(DictionaryEntry val)
             newObs.Education = response;
             break;
         case "Q17": //Employment Status
-            newObs.EmpStat = response;
+            newObs.EmpStatus = response;
             break;
         case "Q72": //Accidents
             accidents = response;
@@ -248,95 +249,109 @@ protected void SelectionChanged(DictionaryEntry val)
 
 protected void DOBChanged(ChangeEventArgs args)
 {
-    //DateTime date1 = new DateTime(newObs.DOB.Year, newObs.DOB.Month, newObs.DOB.Day);
     try
     {
+        dobError = "";
         DateTime newDOB;
-        DateTime.TryParse(args.Value.ToString(), out dob);
-        //DateTime date2 = ;
-
-        age = (DateTime.Today.Year - dob.Year).ToString();
-        //Console.WriteLine(age);
-        Console.WriteLine(age);
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine(e.Message);
-
-    }
-
-}
-
-protected async void SaveData()
-{
-    try
-    {
-        //confirm - TODO test it on mobile
-        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
-
-        if (confirmed)
+        DateTime.TryParse(args.Value.ToString(), out newDOB);
+        DateTime minDate = DateTime.Now.AddYears(-80);
+        DateTime maxDate = DateTime.Now.AddYears(-17);
+        age = (DateTime.Today.Year - newDOB.Year).ToString();
+        if (newDOB >= maxDate || newDOB <= minDate)
         {
-            //Save context items
-            MasterModel model = new MasterModel();
-
-            string serialNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            model.SerialNo = serialNo;
-
-            model.Username = ((AuthStateProvider)_auth).Username;
-            model.AssessmentDate = DateTime.Now;
-
-            if (newObs.Gender != null)
-                model.Gender = newObs.Gender;
-
-            if (newObs.Race != null)
-                model.Race = newObs.Race;
-
-            if (newObs.MaritalStat != null)
-                model.Marital = newObs.MaritalStat;
-
-            if (newObs.Income != null)
-                model.Income = newObs.Income;
-
-            if (dob.ToString() != "1/1/0001 12:00:00 AM")
-                model.DOB = dob.ToString();
-
-            if (age != string.Empty)
-                model.Age = age;
-
-            if (newObs.Education != null)
-                model.Education = newObs.Education;
-
-            if (newObs.EmpStat != null)
-                model.Employment = newObs.EmpStat;
-
-            string sql = @"Insert Into OBS_Master (SerialNo,Username,AssessmentDate,Gender,Race,Marital,Income,DOB,Age,Education,Employment)" +
-                        " Values(@SerialNo,@Username,@AssessmentDate,@Gender,@Race,@Marital,@Income,@DOB,@Age,@Education,@Employment)";
-
-            var result = _db.SaveData(sql, model);
-
-            if (result == 1)
-            {
-                //Save observations
-                //foreach r in resp
-
-
-                //if success, reset model
-                newObs = new AssessmentModel();
-
-                //Logout
-                ((AuthStateProvider)_auth).LogoutUser();
-                _nav.NavigateTo("/logout");
-            }
-
-            Console.WriteLine("");
+            dobError = "Age should be between 17 and 80.";
+            return;
         }
-
+        newObs.DateOfBirth = newDOB.ToString();
+        newObs.Age = age;
     }
     catch (Exception e)
     {
         Console.WriteLine(e.Message);
+
     }
 }
+
+//protected async void SaveData()
+//{
+//    try
+//    {
+//        //confirm - TODO test it on mobile
+//        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+
+//        if (confirmed)
+//        {
+//            //Save context items
+//            MasterModel model = new MasterModel();
+
+//            //mapped to LithoCode?
+//            string serialNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+//            model.SerialNo = serialNo;
+
+//            //mapped to ParticipantID?
+//            model.Username = ((AuthStateProvider)_auth).Username;
+
+//            //mapped to ScanDate
+//            model.AssessmentDate = DateTime.Now;
+
+//            if (newObs.Gender != null)
+//                model.Gender = newObs.Gender;
+
+//            //mapped to Ethnicity
+//            if (newObs.Ethnicity != null)
+//                model.Race = newObs.Ethnicity;
+
+//            if (newObs.Marital != null)
+//                model.Marital = newObs.Marital;
+
+//            if (newObs.Income != null)
+//                model.Income = newObs.Income;
+
+//            //mapped to DateOfBirth
+//            //if (dob.ToString() != "1/1/0001 12:00:00 AM")
+//            if (newObs.DateOfBirth != null)
+//                model.DOB = newObs.DateOfBirth;
+
+//            if (age != string.Empty)
+//                model.Age = age;
+
+//            if (newObs.Education != null)
+//                model.Education = newObs.Education;
+
+//            if (newObs.EmpStatus != null)
+//                model.Employment = newObs.EmpStatus;
+
+
+//            if (newObs.DUIMonthsAgo != null)
+//                model.Education = newObs.EmpStatus;
+
+//            string sql = @"Insert Into ParticipantsDetail(ParticipantsID,Gender,Ethnicity,Marital,Income,DateOfBirth,Age,Education,EmpStatus,DUIMonthsAgo,
+//                            LithoCode,ScanDate)
+//                         Values(@Username,@Gender,@Race,@Marital,@Income,@DOB,@Age,@Education,@Employment,@SerialNo,@AssessmentDate)";
+
+//            var result = _db.SaveData(sql, model);
+
+//            if (result == 1)
+//            {
+//                //Save observations
+//                //foreach r in resp
+
+
+//                //if success, reset model
+//                newObs = new AssessmentModel();
+
+//                //Logout
+//                ((AuthStateProvider)_auth).LogoutUser();
+//                _nav.NavigateTo("/logout");
+//            }
+//            Console.WriteLine("");
+//        }
+//    }
+//    catch (Exception e)
+//    {
+//        Console.WriteLine(e.Message);
+//    }
+//}
 
 protected async void LoadMetaItems()
 {
@@ -384,7 +399,77 @@ protected override void OnInitialized()
 
 protected void Test()
 {
-    _nav.NavigateTo("/logout",true);
+    //JSRuntime.InvokeAsync<string>("Prompt", "Test");
+    _nav.NavigateTo("/logout", true);
 }
+
+
+protected async void SaveData2()
+{
+    try
+    {
+        //Check all req fields
+        //if (isValid)
+        //{
+        //    await JsRuntime.InvokeAsync<bool>("confirm", "Please fix the validation errors.");
+        //    return;
+        //}
+
+        //confirm - TODO test it on mobile
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to submit?");
+
+        if (confirmed)
+        {
+            //Sl# mapped to LithoCode
+            string serialNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+            newObs.LithoCode = serialNo;
+
+            //Username mapped to ParticipantID
+            newObs.ParticipantsID = ((AuthStateProvider)_auth).Username;
+
+            //mapped to ScanDate
+            newObs.ScanDate = DateTime.Now;
+
+
+            //Save observations
+            //foreach r in resp
+            // Q74a-Q74e = defaulted to 0
+            // Q63-Q83 = defaulted to 99
+            string sql = @"Insert Into ParticipantsDetail(ParticipantsID,Gender,Ethnicity,Marital,Income,DateOfBirth,Age,Education,EmpStatus,DUIMonthsAgo,AgeFirstDrink,AgeFirstArrest,TimesArrestedDUI,
+                                Q63,Q64,Q65,Q66,Q67,Q68,Q69,Q70,Q71,Q72,Q73,
+                                Q74a,Q74b,Q74c,Q74d,Q74e,
+                                Q75,Q76,Q77,Q78,Q79,Q80,Q81,Q82,Q83,
+                                LithoCode,ScanDate)
+                            Values(@ParticipantsID,@Gender,@Ethnicity,@Marital,@Income,@DateOfBirth,@Age,@Education,@EmpStatus,@DUIMonthsAgo,@AgeFirstDrink,@AgeFirstArrest,@TimesArrestedDUI,
+                                @Q63,@Q64,@Q65,@Q66,@Q67,@Q68,@Q69,@Q70,@Q71,@Q72,@Q73,
+                                @Q74a,@Q74b,@Q74c,@Q74d,@Q74e,
+                                @Q75,@Q76,@Q77,@Q78,@Q79,@Q80,@Q81,@Q82,@Q83,
+                                @LithoCode,@ScanDate)";
+
+            var result = _db.SaveData(sql, newObs);
+
+            if (result == 1)
+            {
+
+                //if success, reset model
+                newObs = new AssessmentModel();
+
+                //Logout
+                ((AuthStateProvider)_auth).LogoutUser();
+                _nav.NavigateTo("/logout");
+            }
+            Console.WriteLine("");
+        }
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e.Message);
+    }
+}
+
+//public async Task SetFocus()
+//{
+//    await JsRuntime.InvokeVoidAsync("Validate", "09-16-20");
+//}
 
 }

@@ -8,7 +8,7 @@ namespace MASEP.Models
 {
     public class LoginModel
     {
-        [Required(ErrorMessage ="Username is required")]
+        [Required(ErrorMessage ="Email is required")]
         [EmailAddress]
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password is required")]

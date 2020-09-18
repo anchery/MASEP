@@ -10,7 +10,7 @@
         else
         {
             @* Context *@
-            <EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData" Context="_con">
+            <EditForm class="form-group" Model="@newObs" OnValidSubmit="SaveData2" Context="_con">
                 <div class="container">
                     <DataAnnotationsValidator />
                     <div class="mt-2 mb-2">
@@ -27,11 +27,13 @@
                     </div>
                     <div>
                         <label class="control-label col-sm-4" style="margin:0px;padding:0px;">Date of birth</label>
-                        <input type="date" @onchange="DOBChanged" max="@maxdate" />
+                        <input type="date" max="@maxdate" @onchange="DOBChanged" id="datepicker" name="dob"/>
+                        <span class="alert-danger">@dobError</span>
+                        @*<ValidationMessage For="@(() => newObs.DateOfBirth)" />*@
                     </div>
                     <div>
                         <label class="control-label col-sm-4" style="margin:0px;padding:0px;">Age</label>
-                        <InputText type="number" min="17" max ="80" class="form-control col-sm-1 custom-control-inline" @bind-Value="age" style="margin:10px 0px;" />
+                        <InputText type="number" min="17" max="80" class="form-control col-sm-1 custom-control-inline" @bind-Value="@newObs.Age" style="margin:10px 0px;" />
                     </div>
                     <div>
                         <ComponentDD Caption="Highest Level of Education" items="@lstEducation" key="Q16" labelWidth="4" respChanged="SelectionChanged"></ComponentDD>
@@ -41,19 +43,19 @@
                     </div>
                     <div>
                         <label class="control-label col-sm-4" style="margin:0px;padding:0px;">When did you get arrested for DUI?</label>
-                        <InputText type="number" @bind-Value="duiMonths" class="form-control col-sm-1 custom-control-inline mt-1" />
+                        <InputText type="number" @bind-Value="@newObs.DUIMonthsAgo" class="form-control col-sm-1 custom-control-inline mt-1" min="1"/> <span class="ml-1">months ago</span>
                     </div>
                     <div>
                         <label class="control-label col-sm-4" style="margin:0px;padding:0px;">How old were you the very first time you ever drank an alcoholic beverage?</label>
-                        <InputText type="number" @bind-Value="ageFirstDrink" class="form-control col-sm-1 custom-control-inline" />
+                        <InputText type="number" @bind-Value="@newObs.AgeFirstDrink" class="form-control col-sm-1 custom-control-inline" min="1"/>
                     </div>
                     <div>
                         <label class="control-label col-sm-4" style="margin:0px;padding:0px;">How old were you the first time you were arrested for any reason?</label>
-                        <InputText type="number" @bind-Value="ageFirstArrest" class="form-control col-sm-1 custom-control-inline mt-1" />
+                        <InputText type="number" @bind-Value="@newObs.AgeFirstArrest" class="form-control col-sm-1 custom-control-inline mt-1" min="1"/>
                     </div>
                     <div>
                         <label class="control-label col-sm-4" style="margin:0px;padding:0px;">How many times in your life have you been arrested for driving under the influence of alcohol or another drug?</label>
-                        <InputText type="number" @bind-Value="timesArrested" class="form-control col-sm-1 custom-control-inline" />
+                        <InputText type="number" @bind-Value="@newObs.TimesArrestedDUI" class="form-control col-sm-1 custom-control-inline" min="0"/>
                     </div>
 
                     @* Group 1 - Ques 1 to 62 *@
@@ -174,10 +176,12 @@
                     </div>
 
                     @* Save *@
-                    <div class="mb-2">
-                        <button class="btn btn-primary mt-2" type="submit">Submit</button>
-                        <button class="btn btn-warning mt-2" type="reset" @onclick="Test">Cancel</button>
-                    </div>
+                <div class="mb-2">
+                    <button class="btn btn-primary mt-2" type="submit">Submit</button>
+                    <button class="btn btn-warning mt-2" type="reset" @onclick="Test">Cancel</button>
+                    @*<button @onclick="SetFocus">JSInterop</button>*@
+                </div>
+                    <div class="text-danger mt-2">@validationErrorMessage</div>
                     <ValidationSummary />
                 </div>
             </EditForm>

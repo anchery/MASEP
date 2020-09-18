@@ -1,15 +1,16 @@
 ﻿@page "/"
 @page "/{id}"
+
 @inject NavigationManager _nav
 @inject SqliteDataAccess _db
 @inject AuthenticationStateProvider _auth
 @using Serilog;
 
 
-@if (!IsConnected)
+@if (!IsConnected && _nav.Uri.ToString().IndexOf("id=1") == -1)
 {
     <h2 class="text-danger">An error occurred while processing your request.</h2>
-    <h3 class="text-danger">Please contact the agency at 000-000-0000.</h3>
+    <h3 class="text-danger">Please contact MASEP at 000-000-0000.</h3>
 }
 else
 {
@@ -23,14 +24,14 @@ else
             </div>
 
             <div class="form-group">
-                <span class="ml-4">Password:</span> 
+                <span class="ml-4">Password:</span>
                 <input class="ml-1" type="password" @bind-value="@login.Password" />
                 <ValidationMessage For="() => login.Password"></ValidationMessage>
             </div>
 
             <div>
                 <button class="btn btn-primary">Log In</button>
-                <div class="text-danger">@loginErrorMessage</div>
+                <div class="text-danger mt-2">@loginErrorMessage</div>
             </div>
             @*<ValidationSummary />*@
         </div>
@@ -50,16 +51,19 @@ else
 
     protected override void OnInitialized()
     {
-        if (!IsConnected)
+        if (!IsConnected && _nav.Uri.ToString().IndexOf("id=1") == -1)
         {
-            Log.Information("Testing DB connection...");
             IsConnected = _db.TestConnection();
-            if (IsConnected)
-                Log.Information("Connected.");
-            else
-                Log.Information("Connection failed!");
+            
+            //if debug=0, write to log 
+            if (_nav.Uri.ToString().IndexOf("id=0") > 0)
+            {
+                if (IsConnected)
+                    Log.Information("Connected.");
+                else
+                    Log.Information("Connection failed!");
+            }
         }
-        var url = _nav.Uri;
     }
 
     private void LoginUser()
@@ -80,7 +84,7 @@ else
         }
         else
         {
-            if(retryCount == 3)
+            if (retryCount == 3)
             {
                 loginErrorMessage = "Please review the login credentials provided in your MASEP registration email.";
                 retryCount = 0;
